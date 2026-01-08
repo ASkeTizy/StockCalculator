@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 @Component
-@Primary
+
 public class DividendsReceiveMosStock implements DividendsReceive {
     public DividendsReceiveMosStock() {
     }
@@ -33,7 +33,7 @@ public class DividendsReceiveMosStock implements DividendsReceive {
             String endDateParsed = endDate.format(formatter);
 //            String str = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/"+key+".json"
 //                    + "?from="+startDateParsed+"&till="+endDateParsed;
-            String str  = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/SBER.json" + "?from=2024-01-01&till=2025-01-10";
+            String str  = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/SBER.json?from=2024-01-01&till=2025-01-10";
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(str))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
