@@ -5,6 +5,7 @@ import org.example.stockcalc.entity.Promotion;
 import org.example.stockcalc.entity.StockPortfolio;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 @Controller
@@ -25,8 +26,8 @@ public class StockPortfolioCreator {
         return stockPortfolio;
     }
 
-    public Position createPosition(Double price, LocalDateTime date, Integer count) {
-        return new Position(price,date,count);
+    public Position createPosition(String type, LocalDate startDate,LocalDate endDate, Integer count) {
+        return new Position(type,startDate,endDate,count);
 
     }
 }

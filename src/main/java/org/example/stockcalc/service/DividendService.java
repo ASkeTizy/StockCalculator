@@ -2,6 +2,7 @@ package org.example.stockcalc.service;
 
 import org.example.stockcalc.entity.Dividend;
 import org.example.stockcalc.entity.Position;
+import org.example.stockcalc.entity.PositionFromSource;
 import org.example.stockcalc.entity.StockPortfolio;
 import org.example.stockcalc.repository.DividendsReceive;
 import org.example.stockcalc.repository.PositionReceive;
@@ -21,7 +22,7 @@ public class DividendService {
     }
     public List<Dividend> getDividendsByKeyAndDate(String key, LocalDate startDate, LocalDate endDate){
         List<Dividend> dividends = dividendsReceive.getDividendByKeyAndDate(key,startDate,endDate);
-        List<Position> positions = positionReceive.getPositionsByKeyAndDate(key,startDate,endDate);
+        List<PositionFromSource> positions = positionReceive.getPositionsByKeyAndDate(key,startDate,endDate);
         return dividends;
     }
     public Double calculateDividends(String key, StockPortfolio stockPortfolio) {

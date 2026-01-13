@@ -1,32 +1,43 @@
 package org.example.stockcalc.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Position {
-    private Double price;
-    private LocalDateTime date;
+    private String type;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private Integer count;
 
-    public Position(Double price, LocalDateTime date, Integer count) {
-        this.price = price;
-        this.date = date;
+    public Position(String type, LocalDate startDate, LocalDate endDate, Integer count) {
+        this.type = type;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.count = count;
     }
 
-    public Double getPrice() {
-        return price;
+    public String getType() {
+        return type;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public Integer getCount() {

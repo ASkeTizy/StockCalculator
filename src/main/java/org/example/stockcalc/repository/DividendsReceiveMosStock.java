@@ -34,6 +34,7 @@ public class DividendsReceiveMosStock implements DividendsReceive {
 //            String str = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/"+key+".json"
 //                    + "?from="+startDateParsed+"&till="+endDateParsed;
             String str  = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/SBER.json?from=2024-01-01&till=2025-01-10";
+//            https://iss.moex.com/iss/securities/SBER/dividends.json
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(str))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
