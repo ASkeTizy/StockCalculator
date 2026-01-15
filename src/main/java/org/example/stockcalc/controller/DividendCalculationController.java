@@ -14,7 +14,7 @@ public class DividendCalculationController {
     }
     public void calculateDividends(){
 
-        dividendService.getDividendsByKeyAndDate("SBER",LocalDate.of(2024,1,1),LocalDate.now());
+        dividendService.getDividendsByKeyAndDate("SBER",LocalDate.of(2010,1,1),LocalDate.now());
 
     }
 }

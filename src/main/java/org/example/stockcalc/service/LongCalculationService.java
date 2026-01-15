@@ -18,6 +18,7 @@ public class LongCalculationService {
        var sellPrice = list.getLast().legalClosePrice();
        return calculateProfitInPureMoney(buyPrice,sellPrice,position.getCount());
     }
+
     private Double calculateProfit(Double buyPrice, Double sellPrice) {
         return (double) Math.round((sellPrice - buyPrice) / buyPrice);
     }

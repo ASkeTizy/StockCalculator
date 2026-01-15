@@ -12,53 +12,41 @@ import java.util.stream.Collectors;
 
 public class JSONParser {
 
-    JsonNode root;
+    private JsonNode root;
 
     public JSONParser(String fileName, String pathToData) {
         ObjectMapper mapper = new ObjectMapper();
         try (InputStream input = JSONParser.class.getResourceAsStream("/source/" + fileName + ".json")) {
-            root = mapper.readTree(input);
+            root = mapper.readTree(input).get(pathToData);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public List<String[]> getListOfDataFromFile() {
+    public List<List<String>> getListOfDataFromFile() {
         var bla = root.get("data");
-        List<String[]> list =new ArrayList<>();
-        bla.forEach(el ->{
-            el.
-        });
-
-        return List.of();
+        List<List<String>> list = bla.valueStream().map(el -> el.valueStream().map(JsonNode::asText).toList()).toList();
+        return list;
     }
 
-    public List<Integer> getNeededColumnsFromFile(List<String> fields) {
+    public Map<String, Integer> getNeededColumnsFromFile(List<String> fields) {
 
-        JsonNode columnNode = root.get("history").get("columns");
+        JsonNode columnNode = root.get("columns");
 
-        List<Integer> indexes = new ArrayList<>();
+        Map<String, Integer> indexes = new HashMap<>();
         for (int i = 0; i < columnNode.size(); i++) {
 
             for (var field : fields) {
-                if (columnNode.get(i).asText().equals(field)) {
+                String fieldName = columnNode.get(i).asText();
+                if (fieldName.equals(field)) {
 
-                    indexes.add(i);
+                    indexes.put(fieldName, i);
                 }
 
             }
         }
         return indexes;
-    }
-
-    private List<String> getDataFromJSON(String s) {
-        var stroks = s.split(", ");
-        return Arrays.asList(stroks);
-    }
-
-    private String cleanString(String s) {
-        return s.substring(1, s.length() - 1);
     }
 
     public LocalDate dateParser(String s) {

@@ -1,20 +1,25 @@
 package org.example.stockcalc;
 
-import javafx.application.Application;
+import org.example.stockcalc.config.ExternalSourceConfiguration;
 import org.example.stockcalc.controller.DividendCalculationController;
-import org.springframework.context.ApplicationContext;
+import org.example.stockcalc.config.InnerSourceConfiguration;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-@Configuration
-@ComponentScan(basePackages = "org.example.stockcalc")
+@Component
+@ComponentScan
 public class Launcher {
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(Launcher.class);
-//        var arr = context.getBeanDefinitionNames();
-//        Arrays.stream(arr).forEach(System.out::println);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.getEnvironment().setActiveProfiles("work");
+//      context.scan("org.example.stockcalc");
+        context.register(Launcher.class);
+//        context.register(ExternalSourceConfiguration.class);
+        context.refresh();
+
+
         var obj = context.getBean(DividendCalculationController.class);
         obj.calculateDividends();
 //                DividendCalculationController controller = new DividendCalculationController();

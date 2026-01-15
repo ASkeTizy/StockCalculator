@@ -17,4 +17,7 @@ module org.example.stockcalc {
     exports org.example.stockcalc.repository;
     exports org.example.stockcalc.service;
     exports org.example.stockcalc.controller;
+    exports org.example.stockcalc.repository.fileSource;
+    exports org.example.stockcalc.repository.externalSource;
+    exports org.example.stockcalc.config;
 }
