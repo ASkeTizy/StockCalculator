@@ -34,9 +34,9 @@ public class PositionReceiveFromFile implements PositionReceive {
                     var price = Double.parseDouble(el.get(indexes.get("LEGALCLOSEPRICE")));
                     return new PositionFromSource(shortName, date, price);
                 }).toList();
-        List<PositionFromSource> finalArr = endedList.stream().filter(el -> el.tradeDate().isAfter(startDate) && el.tradeDate().isBefore(endDate)).toList();
-        endedList.forEach(System.out::println);
-        return finalArr;
+
+
+        return endedList.stream().filter(el -> el.tradeDate().isAfter(startDate) && el.tradeDate().isBefore(endDate)).toList();
     }
 
 }

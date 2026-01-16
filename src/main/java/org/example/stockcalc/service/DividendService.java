@@ -16,16 +16,13 @@ import java.util.Map;
 @Service
 public class DividendService {
     private final DividendsReceive dividendsReceive;
-    private final PositionReceive positionReceive;
 
-    public DividendService(DividendsReceive dividendsReceive, PositionReceive positionReceive) {
+    public DividendService(DividendsReceive dividendsReceive) {
         this.dividendsReceive = dividendsReceive;
-        this.positionReceive = positionReceive;
     }
 
     public List<Dividend> getDividendsByKeyAndDate(String key, LocalDate startDate, LocalDate endDate) {
         List<Dividend> dividends = dividendsReceive.getDividendByKeyAndDate(key, startDate, endDate);
-        List<PositionFromSource> positions = positionReceive.getPositionsByKeyAndDate(key, startDate, endDate);
         return dividends;
     }
 

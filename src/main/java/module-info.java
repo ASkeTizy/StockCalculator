@@ -11,6 +11,7 @@ module org.example.stockcalc {
     requires spring.beans;
     requires spring.core;
     requires com.fasterxml.jackson.databind;
+//    requires org.example.stockcalc;
 
     opens org.example.stockcalc to javafx.fxml;
     exports org.example.stockcalc;
@@ -20,4 +21,5 @@ module org.example.stockcalc {
     exports org.example.stockcalc.repository.fileSource;
     exports org.example.stockcalc.repository.externalSource;
     exports org.example.stockcalc.config;
+    exports org.example.stockcalc.fx.controller;
 }

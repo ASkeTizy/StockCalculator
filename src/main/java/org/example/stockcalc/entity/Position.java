@@ -8,6 +8,20 @@ public class Position {
     private LocalDate startDate;
     private LocalDate endDate;
     private Integer count;
+    private Double buyPrice;
+    private  Double sellPrice;
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "type='" + type + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", count=" + count +
+                ", buyPrice=" + buyPrice +
+                ", sellPrice=" + sellPrice +
+                '}';
+    }
 
     public Position(String type, LocalDate startDate, LocalDate endDate, Integer count) {
         this.type = type;
@@ -22,6 +36,22 @@ public class Position {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setBuyPrice(Double buyPrice) {
+        this.buyPrice = buyPrice;
+    }
+
+    public void setSellPrice(Double sellPrice) {
+        this.sellPrice = sellPrice;
+    }
+
+    public Double getBuyPrice() {
+        return buyPrice;
+    }
+
+    public Double getSellPrice() {
+        return sellPrice;
     }
 
     public LocalDate getStartDate() {
