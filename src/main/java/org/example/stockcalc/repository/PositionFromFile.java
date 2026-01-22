@@ -12,6 +12,11 @@ public class PositionFromFile implements PositionReceive{
     }
 
     @Override
+    public List<PositionFromSource> getPositions(String type) {
+        return List.of();
+    }
+
+    @Override
     public List<PositionFromSource> getPositionsByKeyAndDate(String name, LocalDate startDate, LocalDate endDate) {
         return List.of();
     }

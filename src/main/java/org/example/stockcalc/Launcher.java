@@ -16,17 +16,17 @@ public class Launcher {
         context.refresh();
 
 
-        var obj = context.getBean(CalculationController.class);
-      var result =  obj.profitWithDividends();
-        var result1 =  obj.profitDividends();
-        var result2 =  obj.profitWithoutDividends();
-        var result3 =  obj.profitWithDividendsPercent();
-        var result4 =  obj.profitWithoutDividendsPercent();
-        System.out.println(result);
-        System.out.println(result1);
-        System.out.println(result2);
-        System.out.println(result3);
-        System.out.println(result4);
+//        var obj = context.getBean(CalculationController.class);
+//      var result =  obj.profitWithDividends();
+//        var result1 =  obj.profitDividends();
+//        var result2 =  obj.profitWithoutDividends();
+//        var result3 =  obj.profitWithDividendsPercent();
+//        var result4 =  obj.profitWithoutDividendsPercent();
+//        System.out.println(result);
+//        System.out.println(result1);
+//        System.out.println(result2);
+//        System.out.println(result3);
+//        System.out.println(result4);
       //                DividendCalculationController controller = new DividendCalculationController();
 //        Application.launch(HelloApplication.class, args);
     }

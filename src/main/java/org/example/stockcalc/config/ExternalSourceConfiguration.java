@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 @Profile("home")
 public class ExternalSourceConfiguration {
     @Bean

@@ -18,6 +18,7 @@ public class InnerSourceConfiguration {
         return new DividendsFromFile(new JSONParser("dividends", "dividends"));
     }
 
+
     @Bean
     public PositionReceive positionReceive(){
         return new PositionReceiveFromFile(new JSONParser("data", "history"));

@@ -8,17 +8,25 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.stockcalc.fx.controller.Controller">
+      fx:controller="org.example.stockcalc.controller.MainController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
-
-    <DatePicker fx:id="datePicker1"/>
+    <LineChart fx:id="lineChart" prefWidth="600" prefHeight="400">
+        <xAxis> <CategoryAxis fx:id="xAxis" label="Дата"/> </xAxis>
+        <yAxis> <NumberAxis fx:id="yAxis" label="Цена"/> </yAxis> </LineChart>
+    <DatePicker fx:id="datePicker1" />
     <DatePicker fx:id="datePicker2"/>
-    <TextField fx:id="textField" text="Введите код акции"/>
-
-    <Button text="Calculate" onAction="#updateText"/>
+    <TextField fx:id="textField" />
+    <TextField fx:id="amountOfPosition" />
+    <CheckBox fx:id="operationCheckBox" />
     <Label fx:id="resultLabel" text="Результат появится здесь"/>
+    <Button text="Calculate" onAction="#updateText"/>
 
 </VBox>

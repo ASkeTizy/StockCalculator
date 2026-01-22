@@ -19,12 +19,7 @@ public class DividendsFromFile implements DividendsReceive {
     }
 
     @Override
-    public Map<String, List<Dividend>> getDividends() {
-        return Map.of();
-    }
-
-    @Override
-    public List<Dividend> getDividendByKeyAndDate(String key, LocalDate startDate, LocalDate endDate) {
+    public List<Dividend> getDividends(String type) {
         var parser = new JSONParser("dividends", "dividends");
         var indexes = parser.getNeededColumnsFromFile(Arrays.asList("registryclosedate", "value", "currencyid"));
         var spittedList = parser.getListOfDataFromFile();
@@ -35,8 +30,14 @@ public class DividendsFromFile implements DividendsReceive {
                     var value = Double.parseDouble(el.get(indexes.get("value")));
                     return new Dividend(currencyId, value, date);
                 }).toList();
-        List<Dividend> finalArr = endedList.stream().filter(el -> el.date().isAfter(startDate) && el.date().isBefore(endDate)).toList();
-        endedList.forEach(System.out::println);
+        return endedList;
+    }
+
+    @Override
+    public List<Dividend> getDividendByKeyAndDate(String key, LocalDate startDate, LocalDate endDate) {
+        var dividends =getDividends(key);
+        List<Dividend> finalArr = dividends.stream().filter(el -> el.date().isAfter(startDate) && el.date().isBefore(endDate)).toList();
+//        endedList.forEach(System.out::println);
         return finalArr;
     }
 

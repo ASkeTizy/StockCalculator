@@ -1,7 +1,12 @@
 package org.example.stockcalc.service;
 
+import org.example.stockcalc.entity.Dividend;
 import org.example.stockcalc.entity.Position;
+import org.example.stockcalc.entity.PositionFromSource;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class CalculateService {
@@ -19,15 +24,21 @@ public class CalculateService {
         return Math.round(profit * 100.0) / 100.0;
 
     }
+    public List<Dividend> getDividends(String type){
+        return dividendService.getDividends(type);
+    }
     private Double calculateProfitInPureMoney(Double buyPrice, Double sellPrice, Integer num) {
         return (sellPrice - buyPrice) * num;
     }
     public Double calculateDividendsProfit(Position position) {
+        return dividendService.calculateDividends(position) * position.getCount();
+    }
+    public Double calculateDividendProfitPercent(Position position) {
         return dividendService.calculateDividends(position);
     }
-    public Double calculateProfitInPercentWithReinvesting(Position position){
+    public Double calculateProfitInPercentWithDividends(Position position){
         Position positionWithPrices = positionCalculationService.storePrices(position);
-        Double dividendSum = calculateDividendsProfit(position);
+        Double dividendSum = calculateDividendProfitPercent(position);
         System.out.println(positionWithPrices);
         return calculateProfitPercent(positionWithPrices.getBuyPrice(),positionWithPrices.getSellPrice(),dividendSum);
     }
@@ -46,4 +57,7 @@ public class CalculateService {
         return pureProfitBySell + dividendSum;
     }
 
+    public List<PositionFromSource> getPositionByKeyAndDate(String type, LocalDate startDate, LocalDate enddate) {
+       return positionCalculationService.getPositionByKeyAndDate(type,startDate,enddate);
+    }
 }

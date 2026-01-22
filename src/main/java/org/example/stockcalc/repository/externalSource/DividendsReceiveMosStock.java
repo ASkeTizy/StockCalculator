@@ -20,8 +20,8 @@ public class DividendsReceiveMosStock implements DividendsReceive {
     }
 
     @Override
-    public Map<String, List<Dividend>> getDividends() {
-        return Map.of();
+    public List<Dividend> getDividends(String type) {
+        return List.of();
     }
 
     @Override

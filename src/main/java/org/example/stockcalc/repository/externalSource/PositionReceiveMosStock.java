@@ -1,5 +1,6 @@
 package org.example.stockcalc.repository.externalSource;
 
+import org.example.stockcalc.entity.Position;
 import org.example.stockcalc.entity.PositionFromSource;
 import org.example.stockcalc.repository.PositionReceive;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,12 @@ import java.util.List;
 public class PositionReceiveMosStock implements PositionReceive {
     @Override
     public List<String> getPositionCodes() {
+        return List.of();
+    }
+
+    @Override
+    public List<PositionFromSource> getPositions(String type) {
+
         return List.of();
     }
 

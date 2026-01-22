@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface DividendsReceive {
-    Map<String, List<Dividend>> getDividends();
+     List<Dividend> getDividends(String type);
     List<Dividend> getDividendByKeyAndDate(String key, LocalDate startDate, LocalDate endDate);
 
 }

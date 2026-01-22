@@ -1,11 +1,17 @@
 package org.example.stockcalc.controller;
 
+import org.example.stockcalc.entity.Dividend;
 import org.example.stockcalc.entity.Position;
+import org.example.stockcalc.entity.PositionFromSource;
 import org.example.stockcalc.service.CalculateService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
-@Controller
+import java.util.List;
+import java.util.Map;
+
+@Component
 public class CalculationController {
     private CalculateService calculateService;
 
@@ -13,29 +19,24 @@ public class CalculationController {
         this.calculateService = calculateService;
     }
 
-    public Double profitWithDividendsPercent(){
-        var position = new Position("SBER",LocalDate.of(2022,2,24),LocalDate.now(),1000);
-        return calculateService.calculateProfitInPercentWithReinvesting(position);
-
+    public List<Double> calculateProfitWithDividends(String type, LocalDate startDate, LocalDate endDate, Integer amount) {
+        var position = new Position(type, startDate, endDate, amount);
+        var dividendProfit = calculateService.calculateDividendsProfit(position);
+        var dividendProfitPercent = calculateService.calculateProfitInPercentWithDividends(position);
+        return List.of(dividendProfit, dividendProfitPercent);
     }
-    public Double profitDividends(){
-        var position = new Position("SBER",LocalDate.of(2022,2,24),LocalDate.now(),1000);
-        return calculateService.calculateDividendsProfit(position);
 
+    public List<Double> calculateProfitWithoutDividends(String type, LocalDate startDate, LocalDate endDate, Integer amount) {
+        var position = new Position(type, startDate, endDate, amount);
+        var dividendProfit = calculateService.calculateProfitMoneyWithoutReinvesting(position);
+        var dividendProfitPercent = calculateService.calculateProfitInPercentWithoutReinvesting(position);
+        return List.of(dividendProfit, dividendProfitPercent);
     }
-    public Double profitWithoutDividendsPercent(){
-        var position = new Position("SBER",LocalDate.of(2022,2,24),LocalDate.now(),1000);
-        return calculateService.calculateProfitInPercentWithoutReinvesting(position);
 
+    public List<Dividend> getDividends(String type) {
+        return calculateService.getDividends(type);
     }
-    public Double profitWithoutDividends() {
-        var position = new Position("SBER",LocalDate.of(2022,2,24),LocalDate.now(),1000);
-        return calculateService.calculateProfitMoneyWithoutReinvesting(position);
-
-    }
-    public Double profitWithDividends() {
-        var position = new Position("SBER",LocalDate.of(2022,1,1),LocalDate.now(),1000);
-        return calculateService.calculateProfitWithReinvesting(position);
-
+    public List<PositionFromSource> getPositions(String type,LocalDate startDate,LocalDate endDate) {
+        return calculateService.getPositionByKeyAndDate(type,startDate,endDate);
     }
 }

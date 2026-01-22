@@ -10,5 +10,6 @@ import java.util.Map;
 
 public interface PositionReceive {
     List<String> getPositionCodes();
+    List<PositionFromSource> getPositions(String type);
     List<PositionFromSource> getPositionsByKeyAndDate(String name, LocalDate startDate, LocalDate endDate);
 }

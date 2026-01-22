@@ -25,11 +25,13 @@ public class DividendService {
         List<Dividend> dividends = dividendsReceive.getDividendByKeyAndDate(key, startDate, endDate);
         return dividends;
     }
-
+    public List<Dividend> getDividends(String key) {
+        return dividendsReceive.getDividends(key);
+    }
     public Double calculateDividends(Position position) {
         List<Dividend> dividends = getDividendsByKeyAndDate(position.getType(), position.getStartDate(), position.getEndDate());
         return dividends.stream()
-                .map(d -> d.coefficient() * position.getCount())
+                .map(Dividend::coefficient)
                 .reduce(0.0, Double::sum);
 //        return promotion.getPositions().stream().map(e->e.getPrice() * dividend.getCoefficient()).reduce(0.0,Double::sum);
     }
