@@ -1,6 +1,7 @@
 package org.example.stockcalc.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.UnaryOperator;
 
 @Component
@@ -81,20 +84,47 @@ public class MainController {
 
 
     }
+
     public void drawGrafic() {
         lineChart.getData().clear();
         xAxis.getCategories().clear();
-        XYChart.Series< String,Number> series = new XYChart.Series<>();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("2025 год");
-        List<PositionFromSource> positions = calculationController.getPositions(textField.getText(),datePicker1.getValue(),datePicker2.getValue());
+        List<PositionFromSource> positions = calculationController.getPositions(textField.getText(), datePicker1.getValue(), datePicker2.getValue());
         var list = series.getData();
-        positions.forEach(el ->{
+        positions.forEach(el -> {
             xAxis.getCategories().add(el.tradeDate().toString());
-            list.add(new XYChart.Data<>(el.tradeDate().toString(),el.legalClosePrice()));
+            list.add(new XYChart.Data<>(el.tradeDate().toString(), el.legalClosePrice()));
         });
         lineChart.getData().add(series);
+        setGraficInteraction(series);
     }
 
+    public void setGraficInteraction(XYChart.Series<String, Number> series) {
+        for (XYChart.Data<String, Number> data : series.getData()) {
+            Node node = data.getNode();
+            node.setOnMouseEntered(event -> {
+                node.setStyle("-fx-background-color: red, white; -fx-background-radius: 5px;");
+            });
+            node.setOnMouseExited(event -> {
+                node.setStyle("");
+            });
+            node.setOnMouseClicked(event ->
+            {
+                if (datePicker1.isFocused()) {
+                    setDateByFocus(datePicker1, data.getXValue());
+                } else {
+                    setDateByFocus(datePicker2, data.getXValue());
+                }
+            });
+        }
+    }
+
+    public void setDateByFocus(DatePicker datePicker,String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+        datePicker.setValue(date);
+    }
 
     public void formatText() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -106,23 +136,6 @@ public class MainController {
         amountOfPosition.setTextFormatter(new TextFormatter<>(filter));
 
     }
-//    public void formatDate(DatePicker datePicker) {
-//        datePicker.setConverter(new StringConverter<LocalDate>() {
-//            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-//
-//            @Override
-//            public String toString(LocalDate date) {
-//                return (date != null) ? formatter.format(date) : "";
-//            }
-//
-//            @Override
-//            public LocalDate fromString(String string) {
-//                return (string != null && !string.isEmpty())
-//                        ? LocalDate.parse(string, formatter)
-//                        : null;
-//            }
-//        });
-//    }
 
 
 }
