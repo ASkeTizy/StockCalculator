@@ -22,16 +22,8 @@ public class PositionReceiveFromFile implements PositionReceive {
 
     @Override
     public List<PositionFromSource> getPositions(String type) {
-        var indexes = parser.getNeededColumnsFromFile(Arrays.asList("BOARDID", "SHORTNAME", "TRADEDATE", "LEGALCLOSEPRICE"));
-        var spittedList = parser.getListOfDataFromFile();
-        List<PositionFromSource> endedList = spittedList.stream().filter(el -> el.get(indexes.get("BOARDID")).equals("TQBR"))
-                .map(el -> {
-                    var date = parser.dateParser(el.get(indexes.get("TRADEDATE")));
-                    var shortName = el.get(indexes.get("SHORTNAME"));
-                    var price = Double.parseDouble(el.get(indexes.get("LEGALCLOSEPRICE")));
-                    return new PositionFromSource(shortName, date, price);
-                }).toList();
-        return endedList;
+       return parser.getPositions(type);
+
     }
 
     @Override

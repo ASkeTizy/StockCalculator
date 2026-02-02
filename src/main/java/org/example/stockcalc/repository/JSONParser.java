@@ -1,7 +1,10 @@
 package org.example.stockcalc.repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.stockcalc.entity.Dividend;
+import org.example.stockcalc.entity.PositionFromSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,14 +17,49 @@ public class JSONParser {
 
     private JsonNode root;
 
-    public JSONParser(String fileName, String pathToData) {
+    public JSONParser(InputStream inputStream, String pathToData) {
         ObjectMapper mapper = new ObjectMapper();
-        try (InputStream input = JSONParser.class.getResourceAsStream("/source/" + fileName + ".json")) {
-            root = mapper.readTree(input).get(pathToData);
+        try {
+            root = mapper.readTree(inputStream).get(pathToData);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+
+    }
+    public JSONParser(String content,String pathToData) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            root = mapper.readTree(content).get(pathToData);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    public List<PositionFromSource> getPositions(String type) {
+        var indexes = getNeededColumnsFromFile(Arrays.asList("BOARDID", "SHORTNAME", "TRADEDATE", "LEGALCLOSEPRICE"));
+        var spittedList = getListOfDataFromFile();
+        List<PositionFromSource> endedList = spittedList.stream().filter(el -> el.get(indexes.get("BOARDID")).equals("TQBR"))
+                .map(el -> {
+                    var date = dateParser(el.get(indexes.get("TRADEDATE")));
+                    var shortName = el.get(indexes.get("SHORTNAME"));
+                    var price = Double.parseDouble(el.get(indexes.get("LEGALCLOSEPRICE")));
+                    return new PositionFromSource(shortName, date, price);
+                }).toList();
+        return endedList;
+    }
+    public List<Dividend> getDividends(String type) {
+
+        var indexes = getNeededColumnsFromFile(Arrays.asList("registryclosedate", "value", "currencyid"));
+        var spittedList = getListOfDataFromFile();
+        List<Dividend> endedList = spittedList.stream()
+                .map(el -> {
+                    var date = dateParser(el.get(indexes.get("registryclosedate")));
+                    var currencyId = el.get(indexes.get("currencyid"));
+                    var value = Double.parseDouble(el.get(indexes.get("value")));
+                    return new Dividend(currencyId, value, date);
+                }).toList();
+        return endedList;
     }
 
     public List<List<String>> getListOfDataFromFile() {

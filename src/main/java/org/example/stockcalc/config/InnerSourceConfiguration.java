@@ -15,12 +15,12 @@ import org.springframework.context.annotation.Profile;
 public class InnerSourceConfiguration {
     @Bean
     public DividendsReceive dividendsReceive(){
-        return new DividendsFromFile(new JSONParser("dividends", "dividends"));
+        return new DividendsFromFile(new JSONParser(JSONParser.class.getResourceAsStream("/source/dividends.json"), "dividends"));
     }
 
 
     @Bean
     public PositionReceive positionReceive(){
-        return new PositionReceiveFromFile(new JSONParser("data", "history"));
+        return new PositionReceiveFromFile(new JSONParser(JSONParser.class.getResourceAsStream("/source/data.json"), "history"));
     }
 }

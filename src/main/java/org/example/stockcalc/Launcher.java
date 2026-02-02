@@ -3,13 +3,15 @@ package org.example.stockcalc;
 import org.example.stockcalc.controller.CalculationController;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 @Component
 @ComponentScan
+@Configuration
 public class Launcher {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.getEnvironment().setActiveProfiles("work");
+        context.getEnvironment().setActiveProfiles("home");
 //      context.scan("org.example.stockcalc");
         context.register(Launcher.class);
 //        context.register(ExternalSourceConfiguration.class);

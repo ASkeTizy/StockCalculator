@@ -6,6 +6,7 @@ import org.example.stockcalc.repository.JSONParser;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -20,17 +21,10 @@ public class DividendsFromFile implements DividendsReceive {
 
     @Override
     public List<Dividend> getDividends(String type) {
-        var parser = new JSONParser("dividends", "dividends");
-        var indexes = parser.getNeededColumnsFromFile(Arrays.asList("registryclosedate", "value", "currencyid"));
-        var spittedList = parser.getListOfDataFromFile();
-        List<Dividend> endedList = spittedList.stream()
-                .map(el -> {
-                    var date = parser.dateParser(el.get(indexes.get("registryclosedate")));
-                    var currencyId = el.get(indexes.get("currencyid"));
-                    var value = Double.parseDouble(el.get(indexes.get("value")));
-                    return new Dividend(currencyId, value, date);
-                }).toList();
-        return endedList;
+        InputStream input = JSONParser.class.getResourceAsStream("/source/dividends.json");
+        var parser = new JSONParser(input, "dividends");
+        return parser.getDividends(type);
+
     }
 
     @Override
