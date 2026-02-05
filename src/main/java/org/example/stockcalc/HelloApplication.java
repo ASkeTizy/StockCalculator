@@ -18,7 +18,7 @@ public class HelloApplication extends Application {
         try {
 
             var context = new AnnotationConfigApplicationContext();
-            context.getEnvironment().setActiveProfiles("home");
+//            context.getEnvironment().setActiveProfiles("work");
             context.register(Launcher.class);
             context.refresh();
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));

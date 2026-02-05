@@ -1,17 +1,20 @@
 package org.example.stockcalc.config;
 
+import org.example.stockcalc.condition.OnSpecificHostCondition;
 import org.example.stockcalc.repository.DividendsReceive;
 import org.example.stockcalc.repository.JSONParser;
 import org.example.stockcalc.repository.PositionReceive;
 import org.example.stockcalc.repository.fileSource.DividendsFromFile;
 import org.example.stockcalc.repository.fileSource.PositionReceiveFromFile;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 
 @Configuration(proxyBeanMethods = false)
-@Profile("work")
+//@Profile("work")
+@Conditional(OnSpecificHostCondition.class)
 public class InnerSourceConfiguration {
     @Bean
     public DividendsReceive dividendsReceive(){
