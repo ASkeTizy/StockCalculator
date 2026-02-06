@@ -15,6 +15,12 @@ import java.util.List;
 
 
 public class PositionReceiveMosStock implements PositionReceive {
+    JSONParser parser;
+
+    public PositionReceiveMosStock(JSONParser parser) {
+        this.parser = parser;
+    }
+
     @Override
     public List<String> getPositionCodes() {
         return List.of();
@@ -22,36 +28,7 @@ public class PositionReceiveMosStock implements PositionReceive {
 
     @Override
     public List<PositionFromSource> getPositions(String type) {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//            String startDateParsed = startDate.format(formatter);
-//            String endDateParsed = endDate.format(formatter);
-            int start = 0;
-            boolean hasMoreData = true;
-            StringBuilder buider = new StringBuilder();
-            while (hasMoreData) {
-
-                String str = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/" + type + ".json?";
-                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(str))
-                        .build();
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                var responseBody = response.body();
-                if (responseBody.contains("\"data\": []")) {
-                    hasMoreData = false;
-                } else {
-                    buider.append(responseBody);
-                    start += 100;
-                }
-                buider.append(response.body());
-            }
-            var jsonParser = new JSONParser(buider.toString(), "data");
-            return jsonParser.getPositions(type);
-
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        return List.of();
     }
 
     @Override
@@ -71,7 +48,7 @@ public class PositionReceiveMosStock implements PositionReceive {
                         .build();
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 var responseBody = response.body();
-                if (responseBody.contains("\"data\": []")) {
+                if (responseBody.contains("\"data\": [")) {
                     hasMoreData = false;
                 } else {
                     buider.append(responseBody);
@@ -79,8 +56,8 @@ public class PositionReceiveMosStock implements PositionReceive {
                 }
                 buider.append(response.body());
             }
-            var jsonParser = new JSONParser(buider.toString(), "data");
-            return jsonParser.getPositions(name);
+            parser.setSource(buider.toString());
+            return parser.getPositions(name);
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

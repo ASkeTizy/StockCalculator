@@ -20,7 +20,11 @@ import java.util.Map;
 
 
 public class DividendsReceiveMosStock implements DividendsReceive {
-    public DividendsReceiveMosStock() {
+
+JSONParser parser;
+
+    public DividendsReceiveMosStock(JSONParser parser) {
+        this.parser = parser;
     }
 
     @Override
@@ -48,8 +52,8 @@ public class DividendsReceiveMosStock implements DividendsReceive {
                 }
                 buider.append(response.body());
             }
-            var jsonParser = new JSONParser(buider.toString(),"dividends");
-            return jsonParser.getDividends(type);
+            parser.setSource(buider.toString());
+            return parser.getDividends(type);
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -59,6 +63,6 @@ public class DividendsReceiveMosStock implements DividendsReceive {
 
     @Override
     public List<Dividend> getDividendByKeyAndDate(String key, LocalDate startDate, LocalDate endDate) {
-       return List.of();
+       return getDividends(key).stream().filter(el -> el.date().isAfter(startDate) && el.date().isBefore(endDate)).toList();
     }
 }

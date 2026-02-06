@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class JSONParser {
 
     private JsonNode root;
-
+    private String pathToData;
     public JSONParser(InputStream inputStream, String pathToData) {
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -27,7 +27,10 @@ public class JSONParser {
 
 
     }
-    public JSONParser(String content,String pathToData) {
+    public JSONParser(String pathToData) {
+        this.pathToData = pathToData;
+    }
+    public void setSource(String content){
         ObjectMapper mapper = new ObjectMapper();
         try {
             root = mapper.readTree(content).get(pathToData);
@@ -36,6 +39,7 @@ public class JSONParser {
         }
 
     }
+
     public List<PositionFromSource> getPositions(String type) {
         var indexes = getNeededColumnsFromFile(Arrays.asList("BOARDID", "SHORTNAME", "TRADEDATE", "LEGALCLOSEPRICE"));
         var spittedList = getListOfDataFromFile();
