@@ -39,4 +39,10 @@ public class CalculationController {
     public List<PositionFromSource> getPositions(String type,LocalDate startDate,LocalDate endDate) {
         return calculateService.getPositionByKeyAndDate(type,startDate,endDate);
     }
+
+    public List<Double> calculateWithReinvesting(String type, LocalDate startDate, LocalDate endDate, Integer amount) {
+        var position = new Position(type,startDate,endDate,amount);
+        var profit = calculateService.calculateProfitWithReinvesting(position);
+        var percentProfit = calculateService.calculateProfitInPercentWithReinvesting(position);
+    }
 }

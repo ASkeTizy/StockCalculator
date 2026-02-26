@@ -11,6 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,7 +31,21 @@ public class PositionReceiveMosStock implements PositionReceive {
     public List<PositionFromSource> getPositions(String type) {
         return List.of();
     }
+    private String getResponse(HttpClient client,String name,String startDateParsed,String endDateParsed,Integer start){
+        String str = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/" + name + ".json" + "?from=" + startDateParsed + "&till=" + endDateParsed + "&start=" + start;
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(str))
+                .build();
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return response.body();
 
+    }
     @Override
     public List<PositionFromSource> getPositionsByKeyAndDate(String name, LocalDate startDate, LocalDate endDate) {
 
@@ -38,30 +53,30 @@ public class PositionReceiveMosStock implements PositionReceive {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String startDateParsed = startDate.format(formatter);
         String endDateParsed = endDate.format(formatter);
-        try {
+        String responseBody = getResponse(client,name,startDateParsed,endDateParsed,0);
+
             int start = 0;
-            boolean hasMoreData = true;
-            StringBuilder buider = new StringBuilder();
-            while (hasMoreData) {
-                String str = "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/" + name + ".json" + "?from=" + startDateParsed + "&till=" + endDateParsed + "&start=" + start;
-                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(str))
-                        .build();
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                var responseBody = response.body();
-                if (responseBody.contains("\"data\": [")) {
-                    hasMoreData = false;
-                } else {
-                    buider.append(responseBody);
+
+            List<PositionFromSource> list = new ArrayList<>();
+            JSONParser cursorParser = new JSONParser("history.cursor");
+            cursorParser.setSource(responseBody);
+            int iter = cursorParser.getIterations(responseBody);
+//            JSONParser dataParser = new JSONParser("data");
+            if(iter < 100) {
+                parser.setSource(responseBody);
+                return parser.getPositions(name);
+            } else {
+
+                for(int i =0; i< iter / 100; i++) {
+                    responseBody = getResponse(client,name,startDateParsed,endDateParsed,start);
+                    parser.setSource(responseBody);
+                    list.addAll(parser.getPositions(name));
                     start += 100;
                 }
-                buider.append(response.body());
+                return list;
             }
-            parser.setSource(buider.toString());
-            return parser.getPositions(name);
 
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
 
 
     }

@@ -21,8 +21,8 @@
     <LineChart fx:id="lineChart" prefWidth="600" prefHeight="400">
         <xAxis> <CategoryAxis fx:id="xAxis" label="Дата"/> </xAxis>
         <yAxis> <NumberAxis fx:id="yAxis" label="Цена"/> </yAxis> </LineChart>
-    <DatePicker fx:id="datePicker1" />
-    <DatePicker fx:id="datePicker2"/>
+    <DatePicker fx:id="datePicker1"  onAction="#handleFirstDateChange"/>
+    <DatePicker fx:id="datePicker2"  onAction="#handleLastDateChange"/>
     <TextField fx:id="textField" />
     <TextField fx:id="amountOfPosition" />
     <CheckBox fx:id="operationCheckBox" />

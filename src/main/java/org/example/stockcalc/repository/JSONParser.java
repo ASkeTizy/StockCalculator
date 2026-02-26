@@ -30,6 +30,15 @@ public class JSONParser {
     public JSONParser(String pathToData) {
         this.pathToData = pathToData;
     }
+
+    public  int getIterations(String responseBody) {
+//        var indexes = getNeededColumnsFromFile(List.of("INDEX","TOTAL"));
+        var data = getListOfDataFromFile();
+//        var index = data.getFirst().get(0);
+        return Integer.valueOf(data.get(0).get(1));
+//        return total;
+    }
+
     public void setSource(String content){
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -39,6 +48,7 @@ public class JSONParser {
         }
 
     }
+
 
     public List<PositionFromSource> getPositions(String type) {
         var indexes = getNeededColumnsFromFile(Arrays.asList("BOARDID", "SHORTNAME", "TRADEDATE", "LEGALCLOSEPRICE"));

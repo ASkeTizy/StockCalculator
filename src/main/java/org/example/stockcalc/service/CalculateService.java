@@ -60,4 +60,15 @@ public class CalculateService {
     public List<PositionFromSource> getPositionByKeyAndDate(String type, LocalDate startDate, LocalDate enddate) {
        return positionCalculationService.getPositionByKeyAndDate(type,startDate,enddate);
     }
+
+    public Object calculateProfitInPercentWithReinvesting(Position position) {
+       var dividends =  getDividends(position.getType());
+
+       var postions = getPositionByKeyAndDate(position.getType(),position.getStartDate(),position.getEndDate());
+       dividends.forEach(div ->  {
+                 var pos =  postions.stream().filter(pos -> pos.tradeDate() == div.date() ).findFirst()
+
+       }
+               );
+    }
 }

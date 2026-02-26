@@ -1,5 +1,6 @@
 package org.example.stockcalc.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
@@ -57,7 +58,7 @@ public class MainController {
         Integer amount = Integer.valueOf(amountOfPosition.getText());
         List<Double> result = null;
         if (operationCheckBox.isSelected()) {
-            System.out.println("Reinvesting");
+            calculationController.calculateWithReinvesting(text,d1,d2,amount);
         } else {
             result = calculationController.calculateProfitWithDividends(text, d1, d2, amount);
             drawGrafic();
@@ -71,7 +72,7 @@ public class MainController {
     @FXML
     public void initialize() {
         formatText();
-        datePicker1.setValue(LocalDate.of(2022, 1, 1));
+        datePicker1.setValue(LocalDate.of(2025, 12, 1));
         datePicker2.setValue(LocalDate.of(2026, 1, 1));
         textField.setText("SBER");
         amountOfPosition.setText("5000");
@@ -138,4 +139,17 @@ public class MainController {
     }
 
 
+    public void handleFirstDateChange(ActionEvent actionEvent) {
+        LocalDate date = datePicker1.getValue();
+        if(date != null) {
+            drawGrafic();
+        }
+    }
+
+    public void handleLastDateChange(ActionEvent actionEvent) {
+        LocalDate date = datePicker2.getValue();
+        if(date != null) {
+            drawGrafic();
+        }
+    }
 }
