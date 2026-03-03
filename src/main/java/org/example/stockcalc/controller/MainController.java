@@ -58,13 +58,13 @@ public class MainController {
         Integer amount = Integer.valueOf(amountOfPosition.getText());
         List<Double> result = null;
         if (operationCheckBox.isSelected()) {
-            calculationController.calculateWithReinvesting(text,d1,d2,amount);
+            result = calculationController.calculateWithReinvesting(text,d1,d2,amount);
         } else {
             result = calculationController.calculateProfitWithDividends(text, d1, d2, amount);
-            drawGrafic();
-            resultLabel.setText("Прибыль в деньгах " + result.getFirst() + ", Прибыль в процентах " + result.getLast());
 
         }
+        drawGrafic();
+        resultLabel.setText("Прибыль в деньгах " + result.getFirst() + ", Прибыль в процентах " + result.getLast());
 
     }
 

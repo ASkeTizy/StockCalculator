@@ -19,38 +19,46 @@ public class CalculateService {
     }
 
 
-    private Double calculateProfitPercent(Double buyPrice, Double sellPrice,Double dividendSum) {
+    private Double calculateProfitPercent(Double buyPrice, Double sellPrice, Double dividendSum) {
         double profit = (sellPrice - buyPrice + dividendSum) / buyPrice * 100;
         return Math.round(profit * 100.0) / 100.0;
 
     }
-    public List<Dividend> getDividends(String type){
+
+    public List<Dividend> getDividends(String type) {
         return dividendService.getDividends(type);
     }
+
     private Double calculateProfitInPureMoney(Double buyPrice, Double sellPrice, Integer num) {
         return (sellPrice - buyPrice) * num;
     }
+
     public Double calculateDividendsProfit(Position position) {
         return dividendService.calculateDividends(position) * position.getCount();
     }
+
     public Double calculateDividendProfitPercent(Position position) {
         return dividendService.calculateDividends(position);
     }
-    public Double calculateProfitInPercentWithDividends(Position position){
+
+    public Double calculateProfitInPercentWithDividends(Position position) {
         Position positionWithPrices = positionCalculationService.storePrices(position);
         Double dividendSum = calculateDividendProfitPercent(position);
         System.out.println(positionWithPrices);
-        return calculateProfitPercent(positionWithPrices.getBuyPrice(),positionWithPrices.getSellPrice(),dividendSum);
+        return calculateProfitPercent(positionWithPrices.getBuyPrice(), positionWithPrices.getSellPrice(), dividendSum);
     }
+
     public Double calculateProfitInPercentWithoutReinvesting(Position position) {
         Position positionWithPrices = positionCalculationService.storePrices(position);
-        return calculateProfitPercent(positionWithPrices.getBuyPrice(),positionWithPrices.getSellPrice(),0.0);
+        return calculateProfitPercent(positionWithPrices.getBuyPrice(), positionWithPrices.getSellPrice(), 0.0);
 
     }
+
     public Double calculateProfitMoneyWithoutReinvesting(Position position) {
         Position positionWithPrices = positionCalculationService.storePrices(position);
-        return calculateProfitInPureMoney(position.getBuyPrice(),position.getSellPrice(), position.getCount());
+        return calculateProfitInPureMoney(position.getBuyPrice(), position.getSellPrice(), position.getCount());
     }
+
     public Double calculateProfitWithReinvesting(Position position) {
         Double dividendSum = calculateDividendsProfit(position);
         Double pureProfitBySell = calculateProfitMoneyWithoutReinvesting(position);
@@ -58,17 +66,23 @@ public class CalculateService {
     }
 
     public List<PositionFromSource> getPositionByKeyAndDate(String type, LocalDate startDate, LocalDate enddate) {
-       return positionCalculationService.getPositionByKeyAndDate(type,startDate,enddate);
+        return positionCalculationService.getPositionByKeyAndDate(type, startDate, enddate);
     }
 
-    public Object calculateProfitInPercentWithReinvesting(Position position) {
-       var dividends =  getDividends(position.getType());
+    public Double calculateProfitWithPositionBuying(Position position) {
+         final Position calculatedPosition = positionCalculationService.storePrices(position);
+        var dividends = getDividends(calculatedPosition.getType()).stream().filter(el -> el.date().isBefore(calculatedPosition.getEndDate()) && el.date().isAfter(calculatedPosition.getStartDate())).toList();
+        int actionCount = calculatedPosition.getCount();
+        var positions = getPositionByKeyAndDate(calculatedPosition.getType(), calculatedPosition.getStartDate(), calculatedPosition.getEndDate());
+        for (var div : dividends) {
+            var foundedPosition = positions.stream().filter(pos -> pos.tradeDate().isBefore(div.date())).findFirst().get();
+            actionCount += (int) (div.coefficient() * actionCount / foundedPosition.legalClosePrice());
+        }
+        return actionCount * calculatedPosition.getSellPrice();
+    }
 
-       var postions = getPositionByKeyAndDate(position.getType(),position.getStartDate(),position.getEndDate());
-       dividends.forEach(div ->  {
-                 var pos =  postions.stream().filter(pos -> pos.tradeDate() == div.date() ).findFirst()
-
-       }
-               );
+    public Double calculateProfitInPercentWithPositionBuying(Position position) {
+        var profitOfBoughtPositions = calculateProfitWithPositionBuying(position);
+        return position.getBuyPrice() * position.getCount() /profitOfBoughtPositions;
     }
 }

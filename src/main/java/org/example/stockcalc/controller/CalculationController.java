@@ -42,7 +42,8 @@ public class CalculationController {
 
     public List<Double> calculateWithReinvesting(String type, LocalDate startDate, LocalDate endDate, Integer amount) {
         var position = new Position(type,startDate,endDate,amount);
-        var profit = calculateService.calculateProfitWithReinvesting(position);
-        var percentProfit = calculateService.calculateProfitInPercentWithReinvesting(position);
+        var profit = calculateService.calculateProfitWithPositionBuying(position);
+        var percentProfit = calculateService.calculateProfitInPercentWithPositionBuying(position);
+        return List.of(profit,percentProfit);
     }
 }
